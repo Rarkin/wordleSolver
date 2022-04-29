@@ -1,19 +1,18 @@
 # variables for player guess, set to canoe my favorite starting word 
-from typing import Counter
-
-
-guess = "canoe"
+guess = ""
 # variable for result w = wrong letter g = correct letter & place y = correct letter wrong place
-result = '"wgyww'
+result = '"'
 
 # get word list from txt file
 word_list_file = open("possibleWords.txt", "r")
 
-possible_words = []
-for line in word_list_file:
-    possible_words = [(line.split()) for line in word_list_file]
+possible_words = word_list_file.read().split()
+# for line in word_list_file:
+#     possible_words = [(line.split()) for line in word_list_file]
 
 word_list_file.close()
+
+print(possible_words)
 
 # find the wrong letters in a guess
 def incorrectLetters(result, guess):
@@ -34,7 +33,7 @@ def correctButWrongPlace(result, guess):
 # find letters that are correct & in the correct place in the guess
 def correctLetterCorrectPlace(result, guess):
     correct_letters = []
-    for i in range(0,5):
+    for i in range(0, 5):
         if result[i] == "g":
             correct_letters.append([guess[i], i])
         return correct_letters
@@ -45,12 +44,12 @@ def letterFrequency(possible_words):
     alhpabet = "abcdefghijklmnopqrstuvwxyz"
     alphabet_dict = {}
     for char in alhpabet:
-        frequency = [0,0,0,0,0]
-        for i in range(0,5):
+        freq = [0,0,0,0,0]
+        for i in range(0, 5):
             for word in possible_words:
                 if word[i] == char:
-                    frequency[i] += 1
-            alphabet_dict.update({char: frequency})
+                    freq[i] += 1
+            alphabet_dict.update({char: freq})
     return alphabet_dict
 
 # way to give a word a score to evaluate how likely it is the correct word for the day by evaluating the letter frequencies
@@ -58,7 +57,7 @@ def score(possible_words, frequencies):
     word_dict = {}
     max_frequency = [0,0,0,0,0]
     for char in frequencies:
-        for i in range(0,5):
+        for i in range(0, 5):
             if max_frequency[i] < frequencies[char][i]:
                 max_frequency[i] = frequencies[char][i]
     for word in possible_words:
