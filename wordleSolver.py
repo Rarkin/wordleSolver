@@ -7,8 +7,6 @@ result = '"'
 word_list_file = open("possibleWords.txt", "r")
 
 possible_words = word_list_file.read().split()
-# for line in word_list_file:
-#     possible_words = [(line.split()) for line in word_list_file]
 
 word_list_file.close()
 
@@ -17,10 +15,10 @@ print(possible_words)
 # find the wrong letters in a guess
 def incorrectLetters(result, guess):
     wrong_letters = []
-    for i in range(0,5):
+    for i in range(0, 5):
         if result[i] == "w":
             wrong_letters.append(guess[i])
-        return wrong_letters
+    return wrong_letters
 
 # find letters that are correct but in the wrong place in the guess
 def correctButWrongPlace(result, guess):
@@ -28,7 +26,7 @@ def correctButWrongPlace(result, guess):
     for i in range(0,5):
         if result[i] == "y":
             correct_but_wrong.append([guess[i], i])
-        return correct_but_wrong
+    return correct_but_wrong
 
 # find letters that are correct & in the correct place in the guess
 def correctLetterCorrectPlace(result, guess):
@@ -36,7 +34,7 @@ def correctLetterCorrectPlace(result, guess):
     for i in range(0, 5):
         if result[i] == "g":
             correct_letters.append([guess[i], i])
-        return correct_letters
+    return correct_letters
 
 # create a dictionary to that holds each letter of the alphabet and map to 5 positions
 # then find freq of the letter in each position this will be used when evaluating how likely a word is to be correct
@@ -84,12 +82,15 @@ def incorrectWordRemover(result, guess, possible_words):
     wrong_letters = incorrectLetters(result, guess)
     correct_but_wrong = correctButWrongPlace(result, guess)
     correct_letters = correctLetterCorrectPlace(result, guess)
+    
     good_letters = []
     for correctLetter in correct_letters:
         good_letters.append(correctLetter[0])
     for correctButWrong in correct_but_wrong:
         good_letters.append(correctButWrong[0])
     
+    print(good_letters)
+    print(wrong_letters)
     potential_words_one = []
     for word in possible_words:
         check = 0
@@ -98,8 +99,7 @@ def incorrectWordRemover(result, guess, possible_words):
                 if wrongLetter in good_letters:
                     pass
                 else:
-                    check = 1
-                    break
+                    check = 1                
         if check == 0:
             potential_words_one.append(word)
 
@@ -152,9 +152,9 @@ def solveWordle(possible_words):
     print("w = wrong letter | g = correct letter in correct place | y = correct letter in incorrect place")
     print("i like to start with the word canoe so why not give that a try")
     print("Enter your first guess:")
-    guess = input()
+    guess = input().lower()
     print("Enter your first result: remember w = wrong letter | g = correct letter in correct place | y = correct letter in incorrect place")
-    result = input()
+    result = input().lower()
     counter = 1
     while result != "ggggg" and counter < 6:
         possible_words = incorrectWordRemover(result, guess, possible_words)
@@ -164,9 +164,9 @@ def solveWordle(possible_words):
         wordSuggestion = bestPossibleWord(possible_words, letterFrequency(possible_words))
         print("i suggest you try: ", wordSuggestion)
         print("Enter you next guess: ")
-        guess = input()
+        guess = input().lower()
         print("Enter your result,  remember w = wrong letter | g = correct letter in correct place | y = correct letter in incorrect place")
-        result = input()
+        result = input().lower()
         counter += 1
     if len(possible_words) == 0:
         print("hmmm looks like you made a mistake")
