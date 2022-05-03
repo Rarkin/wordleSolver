@@ -10,8 +10,6 @@ possible_words = word_list_file.read().split()
 
 word_list_file.close()
 
-print(possible_words)
-
 # find the wrong letters in a guess
 def incorrectLetters(result, guess):
     wrong_letters = []
@@ -89,8 +87,6 @@ def incorrectWordRemover(result, guess, possible_words):
     for correctButWrong in correct_but_wrong:
         good_letters.append(correctButWrong[0])
     
-    print(good_letters)
-    print(wrong_letters)
     potential_words_one = []
     for word in possible_words:
         check = 0
