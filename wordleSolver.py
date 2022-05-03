@@ -34,9 +34,14 @@ def correctLetterCorrectPlace(result, guess):
             correct_letters.append([guess[i], i])
     return correct_letters
 
-# create a dictionary to that holds each letter of the alphabet and map to 5 positions
-# then find freq of the letter in each position this will be used when evaluating how likely a word is to be correct
 def letterFrequency(possible_words):
+    """
+    For each letter in the alphabet, count the number of times it appears in each position of the word
+    
+    :param possible_words: a list of all possible words that can be made from the letters in the hand
+    :return: A dictionary with the key being the letter and the value being a list of the frequency of
+    that letter in each position.
+    """
     alhpabet = "abcdefghijklmnopqrstuvwxyz"
     alphabet_dict = {}
     for char in alhpabet:
@@ -48,8 +53,17 @@ def letterFrequency(possible_words):
             alphabet_dict.update({char: freq})
     return alphabet_dict
 
-# way to give a word a score to evaluate how likely it is the correct word for the day by evaluating the letter frequencies
 def score(possible_words, frequencies):
+    """
+    It takes a list of possible words and a dictionary of frequencies and returns a dictionary of words
+    and their scores
+    
+    :param possible_words: a list of all possible words that can be made from the letters in the rack
+    :param frequencies: a dictionary of dictionaries. The keys are the letters of the alphabet, and the
+    values are dictionaries of the form {0: frequency, 1: frequency, 2: frequency, 3: frequency, 4:
+    frequency}
+    :return: A dictionary of words and their scores.
+    """
     word_dict = {}
     max_frequency = [0,0,0,0,0]
     for char in frequencies:
@@ -64,8 +78,16 @@ def score(possible_words, frequencies):
         word_dict.update({word: word_score})
     return word_dict
 
-#  find the best possible word, Lower score is better, start with stupidly high score
 def bestPossibleWord(possible_words, frequencies):
+    """
+    For each word in the list of possible words, calculate the score of that word, and if that score is
+    less than the current best score, update the best score and the best word
+    
+    :param possible_words: a list of words that are possible to be the best word
+    :param frequencies: a dictionary of letter frequencies, where the keys are letters and the values
+    are the frequencies of those letters
+    :return: The best word is being returned.
+    """
     max_score = 999999999
     best_word = "canoe"
     word_score = score(possible_words, frequencies)
@@ -75,8 +97,18 @@ def bestPossibleWord(possible_words, frequencies):
             best_word = word
     return best_word
 
-# remove words that cannot be correct
+
 def incorrectWordRemover(result, guess, possible_words):
+    """
+    It removes words from the list of possible words that contain letters that are not in the result,
+    letters that are in the result but in the wrong place, and letters that are in the result but in the
+    wrong place and are also in the wrong place in the guess
+    
+    :param result: the result of the guess
+    :param guess: the word that the user guessed
+    :param possible_words: list of all possible words
+    :return: A list of words that are still possible to be the secret word.
+    """
     wrong_letters = incorrectLetters(result, guess)
     correct_but_wrong = correctButWrongPlace(result, guess)
     correct_letters = correctLetterCorrectPlace(result, guess)
@@ -87,6 +119,8 @@ def incorrectWordRemover(result, guess, possible_words):
     for correctButWrong in correct_but_wrong:
         good_letters.append(correctButWrong[0])
     
+# This is the first step in removing words from the list of possible words. It removes words that
+# contain letters that are not in the result.
     potential_words_one = []
     for word in possible_words:
         check = 0
@@ -99,6 +133,8 @@ def incorrectWordRemover(result, guess, possible_words):
         if check == 0:
             potential_words_one.append(word)
 
+# This is the second step in removing words from the list of possible words. It removes words that
+# contain letters that are in the result but in the wrong place.
     potential_words_two = []
     for word in potential_words_one:
         check = 0 
@@ -108,7 +144,9 @@ def incorrectWordRemover(result, guess, possible_words):
                 break
         if check == 0:
             potential_words_two.append(word)
-    
+
+# This is the third step in removing words from the list of possible words. It removes words that
+# contain letters that are in the result but in the wrong place.
     potential_words_three = []
     for word in potential_words_two:
         check = 0 
@@ -119,6 +157,8 @@ def incorrectWordRemover(result, guess, possible_words):
         if check == 0:
             potential_words_three.append(word)
     
+# This is the fourth step in removing words from the list of possible words. It removes words that
+# contain letters that are not in the list of good letters.
     potential_words_four = []
     for word in potential_words_three:
         check = 0
@@ -128,7 +168,9 @@ def incorrectWordRemover(result, guess, possible_words):
                 break
         if check == 0:
             potential_words_four.append(word)
-    
+
+# This is the fifth step in removing words from the list of possible words. It removes words that
+# contain letters that are in the list of good letters but not the correct number of times.
     potential_words_five = []
     for word in potential_words_four:
         check = 0
